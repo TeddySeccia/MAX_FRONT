@@ -1,0 +1,94 @@
+/*CSS Reset*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+ 
+ a {
+   text-decoration: none;
+   color: inherit;
+ }
+ 
+ ul,
+ ol {
+   list-style: none;
+ }
+ 
+ button {
+   cursor: pointer;
+   border: none;
+   background: none;
+   color: inherit;
+ }
+ 
+ h1,
+ h2,
+ h3,
+ h4,
+ h5,
+ h6 {
+   text-wrap: balance;
+ }
+ 
+ p {
+   text-wrap: pretty;
+ }
+
+/*Début du CSS personnalisé*/
+
+button {
+    all: unset;
+    width: 70px;
+    height: 70px;
+    border: solid black 2px;
+    border-radius: 100%;
+    position: relative;
+   
+  
+    
+}
+
+button img{
+    height: 100%;
+   
+}
+
+
+
+button:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 120%;
+    /* Position au-dessus du bouton */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+button:not(:hover)::after {
+    opacity: 0;
+}
+
+.Connexion {
+    height: 50px;
+    width: 100px;
+    border-radius: 30px;
+    font-family: 'Josefin Sans', sans-serif;
+    
+}
+
+.Inscription {
+    height: 50px;
+    width: 100px;
+    border-radius: 30px;
+    font-family: 'Josefin Sans', sans-serif;
+}

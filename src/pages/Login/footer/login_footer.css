@@ -1,0 +1,136 @@
+footer {
+    height: 100px;
+
+    width: 100%;
+}
+
+.footer_bloc {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    position: relative;
+}
+
+/*/////////////////////////////////////////////// PAYSAGE ////////////////////////////////////////////////////////////*/
+
+.footer_bloc_haut_landscape {
+
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.footer_logo_container {
+    position: relative;
+    left: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.footer_logo_container img {
+    height: 80%;
+}
+
+.footer_link_container {
+    width: 70%;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 0
+}
+
+nav ul li {
+    width: 30%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    color: white;
+}
+
+nav ul hr {
+    height: 30px;
+}
+
+nav ul li a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.footer_bloc_bas_landscape {
+    font-size: small;
+    display: flex;
+    justify-content: space-around;
+    color: white;
+
+}
+
+.footer_bloc_bas_landscape p {
+    margin: 0
+}
+
+
+/*/////////////////////////////////////////////// PORTRAIT ////////////////////////////////////////////////////////////*/
+
+
+.footer_bloc_haut_portrait {
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 50%;
+    position: relative;
+    top: -35px
+}
+
+.container {
+    height: 70px;
+    width: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: rgb(0, 0, 0) solid;
+    border-radius: 100%;
+    background-color: white;
+    overflow: hidden;
+}
+
+.container img {
+
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.footer_bloc_bas_portrait {
+
+    display: flex;
+    justify-content: space-around;
+    height: 50%;
+    position: relative;
+    align-items: center;
+    top :20px
+
+}
+
+.user_avatar {
+    height: 150px;
+    width: 150px;
+
+}
+
+.user_name{
+    width: 200px;
+    height: 50px;
+    border-radius: 30px;
+    border: none;
+    align-self: flex-end;
+    font-size: large;
+}

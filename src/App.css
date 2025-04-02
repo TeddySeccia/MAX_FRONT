@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+html, body {
+  min-width: 100px; /* Empêche la réduction sous 800px */
+  min-height: 600px; /* Empêche la réduction sous 600px */
+ 
+}
+
+body{
+  margin : 0;
+  font-family: 'Josefin Sans', sans-serif;
+  min-height: 100vh;
+  font-size: 18px;
+  background-color: lightblue;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#root {
+  width: 100%;
+  margin: 0 ;
+}
+
+
+/* Styles pour les écrans de taille moyenne (tablettes, etc.) */
+@media screen and (max-width: 1024px) {
+  body {
+      font-size: 16px;
+      background-color: lightgreen;
+  }
+}
+
+/* Styles pour les petits écrans (smartphones, etc.) */
+@media screen and (max-width: 768px) {
+  body {
+      font-size: 14px;
+      background-color: lightcoral;
+  }
+}
+
+
+@media screen and (max-width: 505px) {
+  body {
+      font-size: 14px;
+      background-color: rgb(255, 255, 255);
+  }
+}

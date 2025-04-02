@@ -1,0 +1,69 @@
+/* Style de base pour la modale */
+.ReactModal__Overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.ReactModal__Content {
+    background: rgb(255, 255, 255);
+    color: black;
+    border-radius: 30px;
+    border: 2px solid black;
+    width: 70%;
+    max-height: 80vh; /* Hauteur fixe avec défilement si besoin */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto; /* Ajout du scroll si le contenu dépasse */
+    position: relative;
+    padding: 20px;
+}
+
+/* Style du titre */
+.ReactModal__Content h2 {
+    text-align: center;
+    margin-bottom: 1em;
+    font-size: 1.5em;
+}
+
+/* Style des labels et inputs */
+.modal form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+.modal input {
+    width: 60%;
+    height: 3em;
+    background: #ccc;
+    border: 1px solid black;
+    border-radius: 50px;
+    padding: 0 1em;
+    font-size: 1em;
+    margin-bottom: 1em; /* Écart entre chaque input */
+    outline: none;
+}
+
+/* Style des boutons */
+.modalButtonContainer{
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+  
+}
+
+
+
+
