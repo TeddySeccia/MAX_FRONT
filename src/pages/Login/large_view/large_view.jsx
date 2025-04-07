@@ -24,7 +24,7 @@ export default function LargeView({ imagePath }) {
                 <div>
                     <p>Vous avez déjà un <strong>compte Max</strong></p>
                     <Button className="log_buttons" text="Connexion" description="Vous avez déjà un compte Max" onClick={() => openModal("login")} />
-                    <LoginModal isOpen={activeModal === "login"} onClose={closeModal} />
+                    <LoginModal isOpen={activeModal === "login"} onClose={closeModal} isDesktop={true} />
                     
                 </div>
 

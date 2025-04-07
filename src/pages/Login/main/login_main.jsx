@@ -25,8 +25,8 @@ export default function Login_main() {
 
   const isPortrait = useMemo(() => screenSize <= 505, [screenSize]);
   const imagePath = isPortrait ? randomPortraitEntry?.path : randomLandscapeEntry?.path;
-  console.log(imagePath);
-  console.log(isPortrait);
+ 
+  
   
   
 

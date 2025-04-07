@@ -11,7 +11,15 @@ const Dashboard = () => {
         }
     }, [navigate]);
 
-    return <h1>Bienvenue sur le Dashboard !</h1>;
+    return (
+    <>
+        
+        <header></header>
+        <main></main>
+        <footer></footer>
+    </>)
+
+
 };
 
 export default Dashboard;

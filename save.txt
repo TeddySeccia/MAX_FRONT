@@ -1,0 +1,47 @@
+useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch(VITE_API_URL+"/getUser/12", {
+                    method: 'GET',
+                    credentials: 'include' // si tu utilises des cookies de session
+                });
+                if (!response.ok) throw new Error("Erreur lors du fetch");
+    
+                const data = await response.json();
+                setUser({
+                    name: data.name || 'Undefined',
+                    gender: data.gender || 'no_gender',
+                });
+            } catch (error) {
+                console.error("Erreur fetch user :", error);
+                // Tu peux laisser user par défaut ou afficher une alerte
+            }
+        };
+    
+        fetchUser();
+ }, []);
+
+ export const RegisterModal = ({ isOpen, onClose }) => {
+    return (
+        <CustomModal isOpen={isOpen} onClose={onClose} title="Inscription">
+            <form>
+                <label htmlFor="name">Nom</label>
+                <input id="name" type="text" placeholder="Nom" required />
+
+                <label htmlFor="email">Email</label>
+                <input id="email" type="email" placeholder="Email" required />
+
+                <label htmlFor="password">Mot de passe</label>
+                <input id="password" type="password" placeholder="Mot de passe" required />
+
+                <div className='modalButtonContainer'>
+                    <Button icon="../../../public/icones/meta/Valid.webp" style={{ backgroundColor: "#6EBF7D" }} type="submit">
+                    </Button>
+                    <Button type='button' icon="../../../public/icones/meta/Cancel.webp" onClick={onClose}>Annuler</Button>
+                </div>
+            </form>
+        </CustomModal>
+    );
+};
+
+    
