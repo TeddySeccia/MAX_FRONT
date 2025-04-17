@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Modal from 'react-modal';
 import './modal.css'
 import { Button } from '../button/button'
+import {useUser} from "../../hooks/useUser"
 const VITE_API_URL = import.meta.env.VITE_API_URL;
+
+
 
 export const CustomModal = ({ isOpen, onClose, title, children, isDesktop }) => {
     return (
@@ -19,6 +22,7 @@ export const LoginModal = ({ isOpen, onClose, isDesktop }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [storedUser, setStoredUser] = useState(null);
+    const {setUser} = useUser()
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -40,23 +44,26 @@ export const LoginModal = ({ isOpen, onClose, isDesktop }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ email, password }),
-
+                credentials: 'include',
 
             });
 
             const data = await response.json();
-            console.log(data);
+            console.log("Mon objet modal52", data);
 
 
             if (response.ok) {
-                localStorage.setItem("token", data.token);
+                
                 localStorage.setItem("lastUser", JSON.stringify({
                     id: data.user.idUser,
                     name: data.user.userFName,
                     gender: data.user.userSex,
                     email: data.user.userMail
                 }));
-                onClose(); // Ferme la modale après connexion
+                setUser(data.user); 
+                console.log("User dans login modal64", data.user);
+                // Met à jour le contexte utilisateur
+                onClose(); // Ferme la modale après connexion                
                 navigate("/dashboard"); // Redirige vers le dashboard
                 ;
 
@@ -89,9 +96,9 @@ export const LoginModal = ({ isOpen, onClose, isDesktop }) => {
                     />
 
                     <div className='modalButtonContainer'>
-                        <Button icon="../../../public/icones/meta/Valid.webp" style={{ backgroundColor: "#6EBF7D" }} type="submit">
+                        <Button icon="/icones/meta/Valid.webp" style={{ backgroundColor: "#6EBF7D" }} type="submit">
                         </Button>
-                        <Button type='button' icon="../../../public/icones/meta/Cancel.webp" onClick={onClose}>Annuler</Button>
+                        <Button type='button' icon="/icones/meta/Cancel.webp" onClick={onClose}>Annuler</Button>
                     </div>
                 </form>
             ) : (
@@ -117,9 +124,9 @@ export const LoginModal = ({ isOpen, onClose, isDesktop }) => {
                     />
 
                     <div className='modalButtonContainer'>
-                        <Button icon="../../../public/icones/meta/Valid.webp" style={{ backgroundColor: "#6EBF7D" }} type="submit">
+                        <Button icon="/icones/meta/Valid.webp" style={{ backgroundColor: "#6EBF7D" }} type="submit">
                         </Button>
-                        <Button type='button' icon="../../../public/icones/meta/Cancel.webp" onClick={onClose}>Annuler</Button>
+                        <Button type='button' icon="/icones/meta/Cancel.webp" onClick={onClose}>Annuler</Button>
                     </div>
                 </form>
             )}
@@ -154,7 +161,7 @@ export const RegisterModal = ({ isOpen, onClose, }) => {
         setAvatar(null);
         setAvatarPreview(null);
     };
-    
+
 
     const handleAvatarChange = (e) => {
         const file = e.target.files[0];
@@ -181,8 +188,8 @@ export const RegisterModal = ({ isOpen, onClose, }) => {
             formData.append("userAvatar", avatar);
         }
 
-        console.log(formData);
-        
+        console.log(formData + "modal191");
+
 
         try {
             const response = await fetch(VITE_API_URL + "/addUser", {
@@ -191,7 +198,7 @@ export const RegisterModal = ({ isOpen, onClose, }) => {
             });
 
             const data = await response.json();
-            console.log(data);
+            console.log(data + "modal201");
 
             if (response.ok) {
                 setIsSuccess(true); // Affiche le message de succès
@@ -240,7 +247,7 @@ export const RegisterModal = ({ isOpen, onClose, }) => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                     <label htmlFor="confirmPassword">Confirmation de mot de passe</label>
+                    <label htmlFor="confirmPassword">Confirmation de mot de passe</label>
                     <input
                         id="confirmPassword"
                         type="password"
@@ -249,7 +256,7 @@ export const RegisterModal = ({ isOpen, onClose, }) => {
                         onChange={(e) => setconfirmPassword(e.target.value)}
                         required
                     />
-                    
+
                     <label htmlFor="name">Nom</label>
                     <input
                         id="name"
@@ -309,12 +316,52 @@ export const RegisterModal = ({ isOpen, onClose, }) => {
                     )}
 
                     <div className='modalButtonContainer'>
-                        <Button icon="../../../public/icones/meta/Valid.webp" style={{ backgroundColor: "#6EBF7D" }} type="submit">
+                        <Button icon="/icones/meta/Valid.webp" style={{ backgroundColor: "#6EBF7D" }} type="submit">
                         </Button>
-                        <Button type='button' icon="../../../public/icones/meta/Cancel.webp" onClick={onClose}>Annuler</Button>
+                        <Button type='button' icon="/icones/meta/Cancel.webp" onClick={onClose}>Annuler</Button>
                     </div>
                 </form>
             )}
         </CustomModal>
     );
 };
+
+export const LogoutModal = ({ isOpen, onClose }) => {
+    const [isSuccess, setIsSuccess] = useState(false);
+    const navigate = useNavigate();
+
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        setIsSuccess(true);
+        setTimeout(() => {
+            localStorage.removeItem("token");
+            setIsSuccess(false); 
+            onClose();          
+            navigate("/login"); 
+        }, 2000)};
+
+        return (
+            <CustomModal isOpen={isOpen} onClose={onClose} title="Déconnexion">
+                {isSuccess ? (
+                    <div className="success-message">
+                        <p style={{ fontSize: "1.2rem", textAlign: "center" }}>
+                            ✅ A bientôt sur <strong>MAX</strong><br />Redirection...
+                        </p>
+                    </div>
+                ) : (
+                    <div className="logout-message">
+                        <p style={{ fontSize: "1.2rem", textAlign: "center" }}>
+                            Vous allez être déconnecté de votre compte !
+                        </p>
+
+                        <p>Etes vous sur de vouloir nous quitter ?</p>
+                        <div className='modalButtonContainer'>
+                            <Button icon="/icones/meta/Valid.webp" style={{ backgroundColor: "#6EBF7D" }} onClick={handleLogout} type="button">
+                            </Button>
+                            <Button type='button' icon="/icones/meta/Cancel.webp" onClick={onClose}>Annuler</Button>
+                        </div>
+                    </div>
+                )}
+            </CustomModal>
+        );
+    }

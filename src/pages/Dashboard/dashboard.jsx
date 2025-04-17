@@ -1,25 +1,30 @@
-import { useEffect } from "react";
+import { useEffect} from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../hooks/useUser.jsx";
+import Header from '../../components/header/header.jsx'
+import Main from './components/dashboard_main/dashboard_main.jsx'
+
+
+
+
 
 const Dashboard = () => {
-    const navigate = useNavigate();
 
+    const navigate = useNavigate();
+    const { user } = useUser();
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            navigate("/"); // Redirige vers login si pas connecté
+        // Si l'utilisateur est null, on redirige
+        if (user === null) {
+          navigate("/login");
         }
-    }, [navigate]);
+      }, [user, navigate]);
 
     return (
-    <>
-        
-        <header></header>
-        <main></main>
-        <footer></footer>
-    </>)
+        <>
+            <Header />
+            <Main />
 
-
+        </>)
 };
 
 export default Dashboard;

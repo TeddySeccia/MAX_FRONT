@@ -8,11 +8,13 @@ export default function Login_header() {
 
     return (
         <header>
-            <div className="logo_container">
-                <img src="../public/logo/Logo_MAX.webp" className="logo" alt="MAX icon" />
+            <div className='login_header_wrapper'>
+                <div className="logo_container">
+                    <img src="../public/logo/Logo_MAX.webp" className="logo" alt="MAX icon" />
+                </div>
+                <hr />
+                <h1>{randomEntry.text}</h1>
             </div>
-            <hr />
-            <h1>{randomEntry.text}</h1>
         </header>
     )
 }

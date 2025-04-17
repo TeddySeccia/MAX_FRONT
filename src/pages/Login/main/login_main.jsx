@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import data from '../../../datas/login_main.js';  // Import du fichier des données
 import './login_main.css';
-import SmallView  from '../small_view/small_view.jsx';
-import  LargeView  from '../large_view/large_view.jsx';
+import SmallView from '../small_view/small_view.jsx';
+import LargeView from '../large_view/large_view.jsx';
 
 
 export default function Login_main() {
@@ -25,15 +25,17 @@ export default function Login_main() {
 
   const isPortrait = useMemo(() => screenSize <= 505, [screenSize]);
   const imagePath = isPortrait ? randomPortraitEntry?.path : randomLandscapeEntry?.path;
- 
-  
-  
-  
+
+
+
+
 
   return (
     <main>
-      <div className="bg_container">
-        {isPortrait ? <SmallView imagePath={imagePath} /> : <LargeView imagePath={imagePath} />}
+      <div className='login_main'>
+        <div className="bg_container">
+          {isPortrait ? <SmallView imagePath={imagePath} /> : <LargeView imagePath={imagePath} />}
+        </div>
       </div>
     </main>
   );

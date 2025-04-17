@@ -1,0 +1,278 @@
+Voici mon userContext : 
+import { createContext } from "react";
+
+const UserContext = createContext(null); // null = pas encore de user
+
+export default UserContext;
+
+mon userProvider : 
+import { useState, useEffect } from "react";
+import UserContext from "./UserContext";
+
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+
+export function UserProvider({ children }) {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+
+                // Vérifie si le token est toujours valide via /checkToken
+                const check = await fetch(`${VITE_API_URL}/checkToken`, {
+                    method: 'GET',
+                    credentials: 'include', // Important pour envoyer les cookies !
+                    
+                    
+                });
+
+                if (!check.ok) {
+                    console.warn("Token invalide ou expiré");
+                    setUser(null);
+                    return;
+                }
+
+                // Si token OK, récupère les infos utilisateur
+                const userRes = await fetch(`${VITE_API_URL}/getUser`, {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+
+                if (userRes.ok) {
+                    const userData = await userRes.json();
+                    setUser(userData);
+                } else {
+                    console.error("Erreur récupération utilisateur");
+                    setUser(null);
+                }
+
+            } catch (err) {
+                console.error("Erreur lors de la vérification du token :", err);
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUser();
+    }, []);
+    
+    return (
+        <UserContext.Provider value={{ user, setUser, loading }}>
+            {children}
+        </UserContext.Provider>
+    );
+}
+
+mon main.jsx : 
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.jsx';
+import Modal from 'react-modal';
+import { ModalProvider } from './context/ModalContext.jsx';
+import { UserProvider } from './context/UserProvider.jsx';
+
+Modal.setAppElement('#root');
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <UserProvider>
+      <ModalProvider>
+        <App />
+      </ModalProvider>
+    </UserProvider>
+  </StrictMode>
+);
+
+mon app.jsx : 
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useContext } from "react";
+
+import Dashboard from './pages/Dashboard/dashboard';
+import Login from './pages/Login/login';
+
+import './App.css';
+
+import UserContext from './context/UserContext';
+
+function ProtectedRoute({ children }) {
+  const { user, loading } = useContext(UserContext);
+
+  if (loading) {
+    return <div>Chargement de l’utilisateur...</div>; // spinner optionnel
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+}
+
+export default function App() {
+  const { loading } = useContext(UserContext);
+
+  // Optionnel : pour bloquer tout le rendu tant que le contexte charge
+  if (loading) {
+    return <div>Chargement global...</div>;
+  }
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
+  );
+}
+
+mon dashboard.jsx:
+import { useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../../hooks/useUser.jsx";
+import Header from '../../components/header/header.jsx'
+import Main from './components/dashboard_main/dashboard_main.jsx'
+
+
+
+
+
+const Dashboard = () => {
+
+    const navigate = useNavigate();
+    const { user } = useUser();
+    useEffect(() => {
+        // Si l'utilisateur est null, on redirige
+        if (user === null) {
+          navigate("/login");
+        }
+      }, [user, navigate]);
+
+    return (
+        <>
+            <Header />
+            <Main />
+
+        </>)
+};
+
+export default Dashboard;
+
+mon dashboard_main.jsx : 
+import AgendaBlock from '../agendaBlock/agendaBlock.jsx';
+import ContextBlock from '../contextBlock/contextBlock.jsx'
+import CategoryBlock from "../categoryBlock/categoryBlock.jsx";
+import "./dashboard_main.css"
+
+export default function Main() {
+     return (
+
+        <main>
+                <div className="main_wrapper">
+                    <AgendaBlock />
+                    <ContextBlock />
+                    <CategoryBlock />
+                </div>
+            </main>
+    )} 
+
+et mon categoryBlock.jsx:
+import './categoryBlock.css';
+import { useUser } from "../../../../hooks/useUser";
+import { useEffect, useState, useCallback } from "react";
+import { Button } from '../../../../components/button/button';
+import { Block } from "../../../../components/block/block";
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+
+export default function CategoryBlock() {
+  const { user } = useUser();
+  const [categories, setCategories] = useState([]);
+  const [documents, setDocuments] = useState([]);
+
+
+  const fetchCategoriesAndDocs = useCallback(async (parentId = null) => {
+    if (!user) return;
+  
+    try {
+      const endpoint = parentId === null
+        ? `${VITE_API_URL}/getCategoriesByParent/${user.idUser}/${parentId}`
+        : `${VITE_API_URL}/getCategoriesAndDocs/${user.idUser}/${parentId}`;
+  
+      const res = await fetch(endpoint);
+      const data = await res.json();
+
+      console.log("25",data);
+      console.log(parentId);
+      
+      
+      
+      
+  
+      if (parentId === null) {
+        setCategories(Array.isArray(data) ? data : []);
+        setDocuments([]);
+      } else {
+        setCategories(data.categories || []);
+        setDocuments(data.documents || []);
+      }
+  
+    } catch (err) {
+      console.error("Erreur récupération catégories/documents :", err);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchCategoriesAndDocs(); 
+  }, [fetchCategoriesAndDocs]);
+
+  return (
+    <Block blockName="category">
+  <ul>
+    {categories.map((cat) => (
+      <li key={`cat-${cat.idCategory}`}>
+        <Button
+          icon={VITE_API_URL + `/${cat.icones[0].iconeAvatarPath}`}
+          style={{ backgroundColor: "#6EBF7D" }}
+          type="button"
+          text={cat.categoryName}
+          onClick={() => {
+            fetchCategoriesAndDocs(cat.idCategory);
+          }}
+        />
+      </li>
+    ))}
+
+    {documents.map((doc) => (
+      <li key={`doc-${doc.idDocument}`}>
+        <Button
+          icon={VITE_API_URL + `/${doc.icones[0].iconeAvatarPath}`}
+          style={{ backgroundColor: "#7D9CBF" }}
+          type="button"
+          text={doc.documentName}
+          onClick={() => {
+            // Peut-être ouvrir ou afficher le doc 
+          }}
+        />
+      </li>
+    ))}
+  </ul>
+</Block>
+
+  
+  );
+
+  
+}
+   
+ça devrait suffire pour que tu analyse précisément.
+
+

@@ -1,19 +1,48 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from './pages/Dashboard/dashboard';
-import './pages/Login/login'
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useContext } from "react";
 
-import './App.css'
-import Login from './pages/Login/login'
+import Dashboard from './pages/Dashboard/dashboard';
+import Login from './pages/Login/login';
+
+import './App.css';
+
+import UserContext from './context/UserContext';
+
+function ProtectedRoute({ children }) {
+  const { user, loading } = useContext(UserContext);
+
+  if (loading) {
+    return <div>Chargement de l’utilisateur...</div>; // spinner optionnel
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+}
 
 export default function App() {
+  const { loading } = useContext(UserContext);
 
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-            </Routes>
-        </Router>
-    );
+  // Optionnel : pour bloquer tout le rendu tant que le contexte charge
+  if (loading) {
+    return <div>Chargement global...</div>;
+  }
 
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
+  );
 }

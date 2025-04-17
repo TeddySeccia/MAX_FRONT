@@ -1,0 +1,9 @@
+.agenda-block {
+    flex: 1;
+    max-height: 41%;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 0 0 30px 30px;
+    padding: 1rem;
+    border: red solid;
+  }

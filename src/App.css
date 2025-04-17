@@ -9,7 +9,7 @@ html, body {
 body{
   margin : 0;
   font-family: 'Josefin Sans', sans-serif;
-  min-height: 100vh;
+  height: 100vh;
   font-size: 18px;
   background-color: lightblue;
   position: relative;
@@ -20,6 +20,7 @@ body{
 
 #root {
   width: 100%;
+  height: 100%;
   margin: 0 ;
 }
 

@@ -1,0 +1,8 @@
+.agenda-block {
+    flex: 1;
+    max-width: 50%;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  

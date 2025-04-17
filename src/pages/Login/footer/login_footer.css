@@ -1,4 +1,4 @@
-footer {
+.login_footer_wrapper {
     height: 100px;
 
     width: 100%;
@@ -38,7 +38,7 @@ footer {
     width: 70%;
 }
 
-nav ul {
+.login_footer_wrapper nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
@@ -47,7 +47,7 @@ nav ul {
     margin: 0
 }
 
-nav ul li {
+.login_footer_wrapper nav ul li {
     width: 30%;
     display: flex;
     text-align: center;
@@ -55,11 +55,11 @@ nav ul li {
     color: white;
 }
 
-nav ul hr {
+.login_footer_wrapper nav ul hr {
     height: 30px;
 }
 
-nav ul li a {
+.login_footer_wrapper nav ul li a {
     color: inherit;
     text-decoration: none;
 }

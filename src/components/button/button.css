@@ -106,3 +106,11 @@ button:not(:hover)::after {
   border: none;
   cursor: pointer;
 }
+
+.dashboard_button{
+  border: black solid;
+  width: 70px;
+  height: 70px;
+  
+
+}

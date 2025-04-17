@@ -1,0 +1,24 @@
+.context-block {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 90%;
+    max-height: 8.5%;
+    background-color: #fff;
+    border-radius: 50px;
+    padding: 1rem;
+    border: green solid;
+  }
+
+  .icone{
+
+    border: black solid;
+    height: 50px;
+    width: 50px;
+  }
+
+  .icone img{
+    height: 100%;
+    width: 100%;
+  }
