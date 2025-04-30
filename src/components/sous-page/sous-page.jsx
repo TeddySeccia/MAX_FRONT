@@ -2,13 +2,13 @@ import { useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/useUser.jsx";
 import Header from '../../components/header/header.jsx'
-import Main from './components/dashboard_main/dashboard_main.jsx'
+import Main from './sous-page_main/sous-page_main.jsx'
 
 
 
 
 
-const Dashboard = () => {
+const SousPage = () => {
 
     const navigate = useNavigate();
     const { user } = useUser();
@@ -28,4 +28,4 @@ const Dashboard = () => {
         </>)
 };
 
-export default Dashboard;
+export default SousPage;

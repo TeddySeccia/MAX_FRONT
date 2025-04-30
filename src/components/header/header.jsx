@@ -12,19 +12,19 @@ export default function Header() {
                 <nav>
                     <ul>
                         <li>
-                            <Button className="logout" variant="dashboard_button" description="Vous avez déjà un compte " onClick={() => openModal("logout")} />
+                            <Button className="logout" variant="dashboard_button" description="Vous avez déjà un compte "  icon="../../../public/icones/nav/logout.webp" onClick={() => openModal("logout")} />
                             <LogoutModal isOpen={activeModal === "logout"} onClose={closeModal} isDesktop={true} />
                         </li>
                         <li>
-                            <Button className="logout" variant="dashboard_button" description="Vous avez déjà un compte " onClick={() => openModal("logout")} />
+                            <Button className="logout" variant="dashboard_button" description="Vous avez déjà un compte " icon="../../../public/icones/nav/Param.webp"  onClick={() => openModal("logout")} />
                             <LogoutModal isOpen={activeModal === "logout"} onClose={closeModal} isDesktop={true} />
                         </li>
                         <li>
-                            <Button className="logout" variant="dashboard_button" description="Vous avez déjà un compte " onClick={() => openModal("logout")} />
+                            <Button className="logout" variant="dashboard_button" description="Vous avez déjà un compte " icon="../../../public/icones/nav/menu.webp" onClick={() => openModal("logout")} />
                             <LogoutModal isOpen={activeModal === "logout"} onClose={closeModal} isDesktop={true} />
                         </li>
                         <li>
-                            <Button className="logout" variant="dashboard_button" description="Vous avez déjà un compte " onClick={() => openModal("logout")} />
+                            <Button className="logout" variant="dashboard_button" description="Vous avez déjà un compte " icon="../../../public/icones/nav/find.webp" onClick={() => openModal("logout")} />
                             <LogoutModal isOpen={activeModal === "logout"} onClose={closeModal} isDesktop={true} />
                         </li>
                     </ul>

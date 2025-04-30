@@ -1,6 +1,7 @@
 import './categoryBlock.css';
 import { useUser } from "../../../../hooks/useUser";
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from 'react-router-dom'; // Import de useNavigate pour la redirection
 import { Button } from '../../../../components/button/button';
 import { Block } from "../../../../components/block/block";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
@@ -9,21 +10,25 @@ export default function CategoryBlock() {
   const { user } = useUser();
   const [categories, setCategories] = useState([]);
   const [documents, setDocuments] = useState([]);
+  const navigate = useNavigate(); // Fonction pour rediriger
+  console.log("cB14", user);
+  
 
 
-  const fetchCategoriesAndDocs = useCallback(async (parentId = null) => {
-    if (!user) return;
+  const fetchCategoriesAndDocs = useCallback(async (parentId = null, idUser) => {
+    if (!idUser) return;
   
     try {
       const endpoint = parentId === null
-        ? `${VITE_API_URL}/getCategoriesByParent/${user.idUser}/${parentId}`
-        : `${VITE_API_URL}/getCategoriesAndDocs/${user.idUser}/${parentId}`;
+        ? `${VITE_API_URL}/getCategoriesByParent/${idUser}/${parentId}`
+        : `${VITE_API_URL}/getCategoriesAndDocs/${idUser}/${parentId}`;
   
       const res = await fetch(endpoint);
       const data = await res.json();
 
       console.log("25",data);
       console.log(parentId);
+      console.log(idUser);
       
       
       
@@ -40,11 +45,16 @@ export default function CategoryBlock() {
     } catch (err) {
       console.error("Erreur récupération catégories/documents :", err);
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
-    fetchCategoriesAndDocs(); 
-  }, [fetchCategoriesAndDocs]);
+    if (!user) {
+      // Redirection vers la page login si user est null
+      navigate('/login');
+    } else if (user?.idUser) {
+      fetchCategoriesAndDocs(null, user.idUser); // Chargement initial
+    }
+  }, [user, navigate, fetchCategoriesAndDocs]); // Re-déclenche si `user` change
 
   return (
     <Block blockName="category">
@@ -57,7 +67,7 @@ export default function CategoryBlock() {
           type="button"
           text={cat.categoryName}
           onClick={() => {
-            fetchCategoriesAndDocs(cat.idCategory);
+            fetchCategoriesAndDocs(cat.idCategory, user.idUser);
           }}
         />
       </li>

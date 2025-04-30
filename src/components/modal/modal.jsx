@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState,useEffect, useContext } from "react";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { loginUser } from '../../api/userApi';
 import { useNavigate } from "react-router-dom";
 import Modal from 'react-modal';
 import './modal.css'
 import { Button } from '../button/button'
-import {useUser} from "../../hooks/useUser"
+import UserContext from '../../context/UserContext';
+
+
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 
@@ -19,120 +23,143 @@ export const CustomModal = ({ isOpen, onClose, title, children, isDesktop }) => 
 };
 
 export const LoginModal = ({ isOpen, onClose, isDesktop }) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [storedUser, setStoredUser] = useState(null);
-    const {setUser} = useUser()
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
+    const {refetchUser} = useContext(UserContext)
+  
+    const lastUser = JSON.parse(localStorage.getItem('lastUser') || 'null');
+    // ou récupérer via localStorage dans un useEffect si tu préfères
+  
+    const loginMutation = useMutation({
+        mutationFn: loginUser,
+        onSuccess: async (user) => {
+          localStorage.setItem(
+            'lastUser',
+            JSON.stringify({
+              id:     user.idUser,
+              name:   user.userFName,
+              gender: user.userSex,
+              email:  user.userMail,
+            })
+          );
 
-    useEffect(() => {
-        if (isOpen) {
-            const parsedUser = JSON.parse(localStorage.getItem("lastUser"));
-            setStoredUser(parsedUser);
-            if (parsedUser) {
-                setEmail(parsedUser.email);
-            }
-        }
-    }, [isOpen]);
+          queryClient.setQueryData(['currentUser'], user);
+          queryClient.setQueryData(['lastUser'], {
+            email: user.userMail,
+            name: user.userFName,
+            id: user.idUser,
+          });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch(VITE_API_URL + "/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-                credentials: 'include',
-
-            });
-
-            const data = await response.json();
-            console.log("Mon objet modal52", data);
-
-
-            if (response.ok) {
-                
-                localStorage.setItem("lastUser", JSON.stringify({
-                    id: data.user.idUser,
-                    name: data.user.userFName,
-                    gender: data.user.userSex,
-                    email: data.user.userMail
-                }));
-                setUser(data.user); 
-                console.log("User dans login modal64", data.user);
-                // Met à jour le contexte utilisateur
-                onClose(); // Ferme la modale après connexion                
-                navigate("/dashboard"); // Redirige vers le dashboard
-                ;
-
-            } else {
-                alert("Identifiants incorrects !");
-            }
-        } catch (error) {
-            console.error("Erreur de connexion :", error);
-        }
+          await refetchUser();
+          
+          console.log("modal53 user", user);
+          console.log("modal54 lastUser", lastUser);
+          
+          
+          
+          onClose();
+          navigate('/dashboard');
+        },
+        onError: () => {
+          setErrorMessage('Email ou mot de passe incorrect');
+        },
+      });
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      setErrorMessage('');
+      loginMutation.mutate({ email, password });
     };
-
+  
+    useEffect(() => {
+      if (lastUser) {
+        setEmail(lastUser.email);
+      }
+    }, [lastUser]);
+   
+  
     return (
-
         <CustomModal isOpen={isOpen} onClose={onClose} title="Connexion">
-            {storedUser && !isDesktop ? (
-
-                <form onSubmit={handleSubmit}>
-                    <p><strong>Bonjour {storedUser.name} !</strong></p>
-                    <br />
-
-
-                    <label htmlFor="password">Mot de passe</label>
-                    <input
-                        id="password"
-                        type="password"
-                        placeholder="Mot de passe"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-
-                    <div className='modalButtonContainer'>
-                        <Button icon="/icones/meta/Valid.webp" style={{ backgroundColor: "#6EBF7D" }} type="submit">
-                        </Button>
-                        <Button type='button' icon="/icones/meta/Cancel.webp" onClick={onClose}>Annuler</Button>
-                    </div>
-                </form>
-            ) : (
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        id="email"
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-
-                    <label htmlFor="password">Mot de passe</label>
-                    <input
-                        id="password"
-                        type="password"
-                        placeholder="Mot de passe"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-
-                    <div className='modalButtonContainer'>
-                        <Button icon="/icones/meta/Valid.webp" style={{ backgroundColor: "#6EBF7D" }} type="submit">
-                        </Button>
-                        <Button type='button' icon="/icones/meta/Cancel.webp" onClick={onClose}>Annuler</Button>
-                    </div>
-                </form>
-            )}
+          {lastUser && !isDesktop ? (
+            <form onSubmit={handleSubmit}>
+              <p><strong>Bonjour {lastUser.name} !</strong></p>
+    
+              {errorMessage && <p className="error">{errorMessage}</p>}
+    
+              <label htmlFor="password">Mot de passe</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Mot de passe"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+    
+              <div className="modalButtonContainer">
+                <Button
+                  icon="/icones/meta/Valid.webp"
+                  style={{ backgroundColor: "#6EBF7D" }}
+                  type="submit"
+                  disabled={loginMutation.isLoading}
+                />
+                <Button
+                  type="button"
+                  icon="/icones/meta/Cancel.webp"
+                  onClick={onClose}
+                >
+                  Annuler
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              {errorMessage && <p className="error">{errorMessage}</p>}
+    
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+    
+              <label htmlFor="password">Mot de passe</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Mot de passe"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+    
+              <div className="modalButtonContainer">
+                <Button
+                  icon="/icones/meta/Valid.webp"
+                  style={{ backgroundColor: "#6EBF7D" }}
+                  type="submit"
+                  disabled={loginMutation.isLoading}
+                />
+                <Button
+                  type="button"
+                  icon="/icones/meta/Cancel.webp"
+                  onClick={onClose}
+                >
+                  Annuler
+                </Button>
+              </div>
+            </form>
+          )}
         </CustomModal>
-    );
-};
+      );
+    };
+  
 
 export const RegisterModal = ({ isOpen, onClose, }) => {
     const [email, setEmail] = useState("");
@@ -207,7 +234,7 @@ export const RegisterModal = ({ isOpen, onClose, }) => {
                     setAvatarPreview(null); // Réinitialise l'aperçu de l'avatar
                     setIsSuccess(false); // Reset
                     onClose();           // Ferme la modale
-                    navigate("/"); // Redirige
+                    navigate("/login"); // Redirige
                 }, 2000);
             } else {
                 alert("Erreur à l'inscription !");
@@ -329,39 +356,46 @@ export const RegisterModal = ({ isOpen, onClose, }) => {
 export const LogoutModal = ({ isOpen, onClose }) => {
     const [isSuccess, setIsSuccess] = useState(false);
     const navigate = useNavigate();
-
-    const handleLogout = async (e) => {
-        e.preventDefault();
-        setIsSuccess(true);
-        setTimeout(() => {
-            localStorage.removeItem("token");
-            setIsSuccess(false); 
-            onClose();          
-            navigate("/login"); 
-        }, 2000)};
-
-        return (
-            <CustomModal isOpen={isOpen} onClose={onClose} title="Déconnexion">
-                {isSuccess ? (
-                    <div className="success-message">
-                        <p style={{ fontSize: "1.2rem", textAlign: "center" }}>
-                            ✅ A bientôt sur <strong>MAX</strong><br />Redirection...
-                        </p>
-                    </div>
-                ) : (
-                    <div className="logout-message">
-                        <p style={{ fontSize: "1.2rem", textAlign: "center" }}>
-                            Vous allez être déconnecté de votre compte !
-                        </p>
-
-                        <p>Etes vous sur de vouloir nous quitter ?</p>
-                        <div className='modalButtonContainer'>
-                            <Button icon="/icones/meta/Valid.webp" style={{ backgroundColor: "#6EBF7D" }} onClick={handleLogout} type="button">
-                            </Button>
-                            <Button type='button' icon="/icones/meta/Cancel.webp" onClick={onClose}>Annuler</Button>
-                        </div>
-                    </div>
-                )}
-            </CustomModal>
-        );
-    }
+    const { logout } = useContext(UserContext);
+  
+    const handleLogout = (e) => {
+      e.preventDefault();
+      setIsSuccess(true);
+      setTimeout(() => {
+        logout();
+        setIsSuccess(false);
+        onClose();
+        navigate('/login');
+      }, 2000);
+    };
+  
+    return (
+      <CustomModal isOpen={isOpen} onClose={onClose} title="Déconnexion">
+        {isSuccess ? (
+          <div className="success-message">
+            <p style={{ fontSize: '1.2rem', textAlign: 'center' }}>
+              ✅ A bientôt sur <strong>MAX</strong><br />Redirection...
+            </p>
+          </div>
+        ) : (
+          <div className="logout-message">
+            <p style={{ fontSize: '1.2rem', textAlign: 'center' }}>
+              Vous allez être déconnecté de votre compte !
+            </p>
+            <p>Êtes-vous sûr de vouloir nous quitter ?</p>
+            <div className="modalButtonContainer">
+              <Button
+                icon="/icones/meta/Valid.webp"
+                style={{ backgroundColor: '#6EBF7D' }}
+                onClick={handleLogout}
+                type="button"
+              />
+              <Button type="button" icon="/icones/meta/Cancel.webp" onClick={onClose}>
+                Annuler
+              </Button>
+            </div>
+          </div>
+        )}
+      </CustomModal>
+    );
+  };
