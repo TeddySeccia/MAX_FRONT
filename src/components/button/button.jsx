@@ -32,6 +32,7 @@ export const Button = ({
     }
     onDoubleClick && onDoubleClick(e);
   };
+  
   const content = icon ? <img src={icon} alt={text || "Bouton"} className="btn-icon" /> : text;
 
   // Si un href est présent, on affiche un lien `<a>` au lieu d’un `<button>`

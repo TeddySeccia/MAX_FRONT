@@ -40,15 +40,18 @@
 
 button {
     all: unset;
+    display: inline-block;    /* ← ajoute ça */
     width: 70px;
     height: 70px;
     border-radius: 100%;
     position: relative;
+    overflow: hidden; 
       
 }
 
 button img{
     height: 100%;
+    width: 100%;
    
 }
 
@@ -111,6 +114,17 @@ button:not(:hover)::after {
   border: black solid;
   width: 70px;
   height: 70px;
-  
+}
+
+.secondary{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: rgb(0, 0, 0) solid 0.8px;
+}
+
+.secondary img{
+  height: 60%;
+  width: 60%;
 
 }

@@ -1,10 +1,57 @@
 .category-block {
-    flex: 1;
-    max-height: 31%;
-    width: 100%;
-    background-color: #fff;
-    border-radius: 30px;
-    padding: 1rem;
-    border: rgb(255, 221, 0) solid;
-    
-  }
+  flex: 1;
+  max-height: 31%;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 30px;
+  padding: 1rem;
+  border: rgb(255, 221, 0) solid;
+
+
+}
+
+.corps{
+  width: 100%;
+  height: 100%;
+}
+
+.corps ul{
+  width: 100%;
+}
+
+li {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
+.doc-info {
+ 
+  position: relative;
+  
+  width: 100%;         /* pour que le tooltip se positionne par rapport à ce bloc */
+}
+
+.doc-name {
+  max-width: 100%;                  /* limite à 8 caractères en largeur variable selon police */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: max-width 0.2s ease, white-space 0.2s ease;
+}
+
+
+.doc-info:hover .doc-name {
+  max-width: none;        /* plus de limite */
+  white-space: normal;    /* autorise le retour à la ligne si trop long */
+  overflow: visible;      /* plus de masquage */
+  text-overflow: clip;    /* ne plus utiliser l’ellipsis */
+  position: absolute;     /* on sort du flow pour ne rien décaler */
+  top: 100%;              /* juste en dessous du type (ou 0 si tu veux caler différemment) */
+  left: 0;
+  background: white;      /* pour garder un fond uni */
+  z-index: 10;
+}

@@ -22,13 +22,7 @@ export async function fetchCurrentUser() {
     return userRes.json();
   }
   
-  // src/services/userService.js
-
-
-
 /**
- * Envoie les credentials au backend, stocke l'accessToken
- * et retourne l'objet user.
  * @param {{ email: string, password: string }} param0
  * @returns {Promise<Object>} l'utilisateur connecté
  * @throws {Error} si la connexion échoue
@@ -63,3 +57,4 @@ export async function loginUser({ email, password }) {
 
   return user;
 }
+

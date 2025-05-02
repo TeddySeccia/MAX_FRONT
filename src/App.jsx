@@ -4,6 +4,7 @@ import { useContext } from "react";
 import Dashboard from './pages/Dashboard/dashboard';
 import Login from './pages/Login/login';
 
+
 import './App.css';
 
 import UserContext from './context/UserContext';
@@ -42,6 +43,15 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/quickView/:id"
+          element={
+            <ProtectedRoute>
+              <QuickView />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     
   );

@@ -1,0 +1,15 @@
+.entete{
+    display: flex;
+    justify-content: center;
+    text-transform: uppercase;
+}
+
+.corps ul{
+    display: flex;
+}
+
+.corps ul li{
+    padding: 3px;
+    
+}
+

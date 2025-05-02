@@ -1,9 +1,19 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchCurrentUser } from "../api/userApi";
 import UserContext from "./UserContext";
+import { useEffect } from "react";
+
+
 
 export function UserProvider({ children }) {
   const queryClient = useQueryClient();
+  
+  useEffect(() => {
+    const existing = queryClient.getQueryData(['navigationTrail']);
+    if (!existing) {
+      queryClient.setQueryData(['navigationTrail'], [null]); // Racine
+    }
+  }, [queryClient]);
 
   // useQuery va lancer fetchCurrentUser au montage et mettre en cache la réponse
   const {
@@ -27,6 +37,7 @@ export function UserProvider({ children }) {
     localStorage.removeItem("accessToken");
     // on purge le cache de la query user
     queryClient.removeQueries(["currentUser"]);
+    
   };
 
   return (
