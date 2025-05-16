@@ -1,9 +1,53 @@
 .agenda-block {
-    flex: 1;
-    max-height: 41%;
-    width: 100%;
-    background-color: #fff;
-    border-radius: 0 0 30px 30px;
-    padding: 1rem;
-    border: red solid;
-  }
+  flex: 1;
+  max-height: 45%;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 0 0 30px 30px;
+  padding: 1rem;
+  border: red solid;
+}
+
+/* src/components/yourpath/AgendaBlock.css */
+
+.agenda-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* hérité de ton <Block> qui doit avoir une hauteur fixe */
+}
+
+.calendarContainer {
+  flex: 0 0 85%;
+  /* ou : height: 90%; */
+  overflow: auto;
+}
+
+.toggleContainer {
+  
+  flex: 0 0 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  
+  
+}
+
+.toggleContainer button {
+  height: 100%;
+  width: 10%;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+ 
+}
+
+.toggleContainer button.active {
+  border-color: #007bff;
+  font-weight: bold;
+}

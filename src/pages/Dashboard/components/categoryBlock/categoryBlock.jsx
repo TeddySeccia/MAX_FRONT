@@ -10,6 +10,8 @@ const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export default function CategoryBlock() {
   const { user } = useUser();
+  
+  
   const [categories, setCategories] = useState([]);
   const [documents, setDocuments] = useState([]);
 

@@ -1,0 +1,28 @@
+.actionButton {
+    position: relative;
+    display: inline-block;
+}
+
+
+.actionList {
+    display: flex;
+    position: absolute;
+    bottom: 60%;
+    background: rgb(222, 13, 13);
+    border: 5px solid #5e18c1;
+    
+    list-style: none;
+    margin: 0;
+    
+    z-index: 1100;
+    width: 350px;
+left: -139px
+    
+    
+}
+
+.actionList li {
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
